@@ -1,0 +1,12 @@
+server: 
+  port: 8080
+postgres: 
+  host: "localhost"
+  port: 54321
+  database: "saas-be-usergroup"
+  user: "postgres"
+  password: "password"
+redis: 
+  host: "localhost"
+  port: 63791
+  password: ""
