@@ -13,11 +13,3 @@ redis:
 jwt:
   access_secret: "9991fdc97dc1dfcb5fe1348c8acd580bb2f130a838b2ba908577c83f77bb3ef9"
   refresh_secret: "9991fdc97dc1dfcb5fe1348c8acd580bb2f130a838b2ba908577213h5wdfd4"
-mailer:
-  encryption: ssl
-  from: ""
-  from_name: ""
-  host: ""
-  password: ""
-  port: 465
-  username: ""

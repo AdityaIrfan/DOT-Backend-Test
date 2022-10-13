@@ -2,6 +2,26 @@ package auth
 
 import "encoding/base64"
 
+type Session struct {
+	UUID string
+}
+
+func NewSession(uuid string) *Session {
+	return &Session{UUID: uuid}
+}
+
+func (s *Session) IsEmpty() bool {
+	return s == nil
+}
+
+func (s Session) GetUUID() string {
+	return s.UUID
+}
+
+func (s Session) IsUUIDEmpty() bool {
+	return s.UUID == ""
+}
+
 type SessionToken struct {
 	SessionToken string
 }

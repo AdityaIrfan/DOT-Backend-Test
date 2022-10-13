@@ -1,6 +1,9 @@
 package user
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 type UserStatus string
 
@@ -21,6 +24,26 @@ type User struct {
 	Status           UserStatus
 	ConfirmationTime time.Time
 	InsertTs         time.Time
+}
+
+func (u *User) SetFirstName(firstName string) {
+	u.FirstName = firstName
+}
+
+func (u *User) SetLastName(lastName string) {
+	u.LastName = lastName
+}
+
+func (u *User) SetUsername(userName string) {
+	u.UserName = userName
+}
+
+func (u *User) SetPassword(hashedPassword string) {
+	u.Password = hashedPassword
+}
+
+func NewUser() *User {
+	return &User{}
 }
 
 func (u *User) IsEmpty() bool {
@@ -63,4 +86,16 @@ func (u *User) ToTransformer() *Transformer {
 		UserName:  u.UserName,
 		Email:     u.Email,
 	}
+}
+
+func (u User) GetName() string {
+	return fmt.Sprintf("%s %s", u.FirstName, u.LastName)
+}
+
+func (u User) GetID() uint64 {
+	return u.ID
+}
+
+func (u User) GetPassword() string {
+	return u.Password
 }

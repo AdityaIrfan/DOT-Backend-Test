@@ -1,7 +1,12 @@
 package server
 
 import (
+	"database/sql"
 	"fmt"
+	"github.com/gofiber/fiber/v2/middleware/compress"
+	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/etag"
+	"github.com/saas-be-usergroup/pkg/redis"
 	"log"
 	"os"
 	"os/signal"
@@ -36,13 +41,21 @@ func Run() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer pg.Close()
+	sqlDB, err := pg.DB()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer func(sqlDB *sql.DB) {
+		err := sqlDB.Close()
+		if err != nil {
+		}
+	}(sqlDB)
 
-	// //load connection redis
-	// _, err = redis.Connect()
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
+	//load connection redis
+	red, err := redis.Connect()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	zap, err := logger.Initialize()
 	if err != nil {
@@ -52,10 +65,16 @@ func Run() {
 	app := fiber.New(fiber.Config{
 		IdleTimeout: 5,
 	})
+	app.Use(
+		compress.New(),
+		etag.New(),
+		cors.New(),
+	)
 	rh := &baseApp.Handlers{
 		Postgres: pg,
 		R:        app,
 		Logger:   zap,
+		Redis:    red,
 	}
 	rh.SetupRouter()
 
@@ -76,6 +95,6 @@ func Run() {
 	fmt.Println("Running cleanup tasks...")
 
 	// Your cleanup tasks go here
-	pg.Close()
+	sqlDB.Close()
 	fmt.Println("services was successful shutdown.")
 }
